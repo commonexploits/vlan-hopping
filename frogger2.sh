@@ -122,20 +122,20 @@ if [ $? -eq 1 ]
 		exit 1
 fi
 
-ARPVER=$(arp-scan -V 2>&1 | grep "arp-scan [0-9]" |awk '{print $2}' | cut -d "." -f 1,2)
+# ARP_SCAN V2.0 
+ARPVER=$(arp-scan -V 2>&1 | grep "arp-scan [0-9]" | awk '{print $2}' | cut -d "." -f 1,2)
 
-#Check for arpscan
+# Check for arp-scan
 which arp-scan >/dev/null
-if [ $? -eq 1 ]
-	then
-		printf '\n \r%s %s\n\n' "${BRIGHT}${RED}[!]${NORMAL} Unable to find the required arp-scan program, install at least version 1.8 and try again. Download from www.nta-monitor.com."
-		exit 1
+if [ $? -eq 1 ]; then
+    printf '\n \r%s %s\n\n' "${BRIGHT}${RED}[!]${NORMAL} Unable to find the required arp-scan program, install at least version 1.8 and try again. Download from www.nta-monitor.com."
+    exit 1
 else
-	if [[ "$ARPVER" < "1.8" ]]
-		then
-			printf '\n \r%s %s\n\n' "${BRIGHT}${RED}[!]${NORMAL} Unable to find version 1.8 of arp-scan, 1.8 is required for VLAN tagging. Install at least version 1.8 and try again. Download from www.nta-monitor.com."
-			exit 1
-	fi
+    # Comparar versiones correctamente
+    if [ "$(printf '%s\n' "1.8" "$ARPVER" | sort -V | head -n1)" != "1.8" ]; then
+        printf '\n \r%s %s\n\n' "${BRIGHT}${RED}[!]${NORMAL} Unable to find version 1.8 of arp-scan, 1.8 is required for VLAN tagging. Install at least version 1.8 and try again. Download from www.nta-monitor.com."
+        exit 1
+    fi
 fi
 
 #Check for ethtool
